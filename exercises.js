@@ -15,8 +15,8 @@ class Order {
 }
 
 const allShops = [
-  new Shop(1, "Atlantis"),
-  new Shop(2, "Rustic Range"),
+  new Shop(1, "Atlantis"), // {id: 1, name: Atlantis}
+  new Shop(2, "Rustic Range"), 
   new Shop(3, "Golden Apple"),
   new Shop(4, "Cascade Corner")
 ];
@@ -54,3 +54,57 @@ const allOrders = [
 // 3. Display the name of the shop that had the least orders in May
 
 // Put your code here
+
+// 1a. Display the names of the shops
+// allShops.forEach(shop => console.log(shop.name))
+
+// 1b. Display the sum of the shop's fulfilled orders after the name
+function fulfilledOrders(){
+  const result = {}
+  for (shop of allShops){
+    for (order of allOrders){
+      if(shop.id === order.shopId){
+        // console.log(result[shop.name])
+        result[shop.name] ? 
+          result[shop.name] += order.amount
+          : result[shop.name] = order.amount
+      }
+    }
+  }
+  return result
+}
+// console.log(fulfilledOrders())
+
+function largestUnfullfilled(){
+
+  const unfulfilled = allOrders.filter((order) => !order.fulfilled)
+  console.log(unfulfilled)
+  const largest = unfulfilled.sort((a, b) => b.amount - a.amount)[0]
+  console.log(largest)
+  const largestShop = allShops.find(shop => shop.id === largest.shopId)
+  return largestShop.name
+}
+// console.log(largestUnfullfilled())
+
+function leastMayOrders(){
+  const mayOrders = allOrders.filter(order => order.month === 5) 
+  // console.log(mayOrders)
+  const shop = mayOrders.reduce((acc, { shopId }) =>{
+    if(acc[shopId]){
+      acc[shopId] += 1
+    }else acc[shopId] = 1
+    return acc;
+  }, {});
+
+  const resArr = []
+  for(let num in shop){
+    resArr.push(num)
+  }
+  const result = resArr.sort((a, b) => shop[a] - shop[b])[0]
+
+  const {name} = allShops.find(shop => shop.id === +result)
+
+
+  return name;
+}
+console.log(leastMayOrders())
